@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="463.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button layoutX="189.0" layoutY="246.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="85.0" text="Login" />
+      <Label layoutX="96.0" layoutY="116.0" text="Username:" />
+      <Label layoutX="107.0" layoutY="161.0" text="Parola:" />
+      <Label contentDisplay="CENTER" layoutX="101.0" layoutY="38.0" text="SPUNETI NU BUGURILOR">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <TextField layoutX="158.0" layoutY="112.0" />
+      <TextField layoutX="158.0" layoutY="157.0" />
+   </children>
+</Pane>
