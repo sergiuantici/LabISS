@@ -56,7 +56,7 @@ public class LoginController {
             if(Objects.equals(user2.getRole(), "verificator"))
             {
                 FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("verificator.fxml"));
-                stage = (Stage) log.getScene().getWindow();
+                Stage stage = new Stage();
                 Scene scene = new Scene(fxmlLoader.load());
                 stage.setScene(scene);
                 VerificatorController controller=fxmlLoader.getController();
@@ -66,21 +66,21 @@ public class LoginController {
             else if(Objects.equals(user2.getRole(), "programator"))
             {
                 FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("programator.fxml"));
-                stage = (Stage) log.getScene().getWindow();
+                Stage stage = new Stage();
                 Scene scene = new Scene(fxmlLoader.load());
                 stage.setScene(scene);
                 ProgramatorController controller=fxmlLoader.getController();
-//                controller.init(new Page(user.getId()));
+                controller.init(userRepostiory,bugRepository);
                 stage.show();
             }
             else
             {
                 FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("admin.fxml"));
-                stage = (Stage) log.getScene().getWindow();
+                Stage stage = new Stage();
                 Scene scene = new Scene(fxmlLoader.load());
                 stage.setScene(scene);
                 AdminController controller=fxmlLoader.getController();
-//                controller.init(new Page(user.getId()));
+                controller.init(userRepostiory,bugRepository);
                 stage.show();
             }
         }

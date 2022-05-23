@@ -1,14 +1,29 @@
 package com.bug.bugiss2.domain;
 
-public class Bug extends Entity<Long>{
+import java.io.Serializable;
+
+public class Bug implements Serializable {
     private String name;
     private String description;
     private String status;
-
+    private Long id;
+    private static final long serialVersionUID = 7331115341259248461L;
     public Bug(String name, String description, String status) {
         this.name = name;
         this.description = description;
         this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Bug() {
+
     }
 
     public String getName() {

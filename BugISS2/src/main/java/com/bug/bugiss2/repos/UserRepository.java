@@ -2,6 +2,9 @@ package com.bug.bugiss2.repos;
 
 import com.bug.bugiss2.domain.JdbcUtils;
 import com.bug.bugiss2.domain.User;
+import com.bug.bugiss2.observer.Observer;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,8 +16,9 @@ import java.util.Properties;
 
 public class UserRepository implements Repository<Long, User>{
     private JdbcUtils dbUtils;
-
-    public UserRepository(Properties props) {
+    private SessionFactory sessionFactory;
+    public UserRepository(Properties props,SessionFactory sessionFactory) {
+        this.sessionFactory=sessionFactory;
         dbUtils = new JdbcUtils(props);
     }
 
@@ -25,39 +29,17 @@ public class UserRepository implements Repository<Long, User>{
 
     @Override
     public Iterable<User> findAll() {
-        Connection con = dbUtils.getConnection();
-        List<User> users = new ArrayList<>();
-        try (PreparedStatement preStmt = con.prepareStatement("select * from User")) {
-            try (ResultSet result = preStmt.executeQuery()) {
-                while (result.next()) {
-                    Long id = result.getLong("id");
-                    String email = result.getString("email");
-                    String password = result.getString("password");
-                    String role=result.getString("role");
-                    User user = new User(email,password,role);
-                    user.setId(id);
-                    users.add(user);
-                }
-            }
-        } catch (SQLException ex) {
-            System.err.println("Error BD " + ex);
-        }
-        return users;
+        return null;
     }
 
     @Override
     public User save(User entity) {
-        Connection con = dbUtils.getConnection();
-        try (PreparedStatement preStmt = con.prepareStatement("insert into User(email,password,role) values (?,?,?)")) {
-            preStmt.setString(1,entity.getEmail());
-            preStmt.setString(2,entity.getPassword());
-            preStmt.setString(3,entity.getRole());
-            int result = preStmt.executeUpdate();
-            return entity;
-        } catch (SQLException ex) {
-            System.out.println("Error DB" + ex);
+        try(Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.save(entity);
+            session.getTransaction().commit();
         }
-        return null;
+        return entity;
     }
 
     @Override
@@ -72,22 +54,44 @@ public class UserRepository implements Repository<Long, User>{
     }
 
     public User exists(String email, String password) {
-        Connection con = dbUtils.getConnection();
-        try (PreparedStatement preStmt = con.prepareStatement("select * from user where email=? and password=?")) {
-            preStmt.setString(1, email);
-            preStmt.setString(2, password);
-            try (ResultSet result = preStmt.executeQuery()) {
-                while (result.next()) {
-                    Long id = result.getLong("id");
-                    String role=result.getString("role");
-                    User user = new User(email,password,role);
-                    user.setId(id);
-                    return user;
-                }
-            }
-        } catch (SQLException ex) {
-            System.err.println("Error BD " + ex);
+        try(Session session = sessionFactory.openSession()){
+            session.beginTransaction();
+            String hql = "FROM User U WHERE U.email = :email and U.password=:password";
+            List<User> result = session.createQuery(hql,User.class).setParameter("email",email)
+                    .setParameter("password",password).list();
+            session.getTransaction().commit();
+            if (result.size()==0)
+                return null;
+            return result.get(0);
         }
-        return null;
+    }
+
+    public User existsAlready(String email){
+        try(Session session = sessionFactory.openSession()){
+            session.beginTransaction();
+            String hql = "FROM User U WHERE U.email = :email";
+            List<User> result = session.createQuery(hql,User.class)
+                    .setParameter("email",email)
+                    .list();
+            session.getTransaction().commit();
+            if (result.size()==0)
+                return null;
+            return result.get(0);
+        }
+    }
+
+    @Override
+    public void addObserver(Observer e) {
+
+    }
+
+    @Override
+    public void removeObserver(Observer e) {
+
+    }
+
+    @Override
+    public void notifyObservers() {
+
     }
 }

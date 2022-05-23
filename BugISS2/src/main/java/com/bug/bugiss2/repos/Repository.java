@@ -1,5 +1,7 @@
 package com.bug.bugiss2.repos;
 
+import com.bug.bugiss2.observer.Observable;
+
 /**
  * CRUD operations repository interface
  *
@@ -7,7 +9,7 @@ package com.bug.bugiss2.repos;
  * @param <E>  -  type of entities saved in repository
  */
 
-public interface Repository<ID, E> {
+public interface Repository<ID, E> extends Observable {
 
     /**
      * @param id -the id of the entity to be returned
